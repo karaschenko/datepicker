@@ -55,10 +55,17 @@
             <div class="calendar-header__year">
                 {{year}}
             </div>
-            <div class="datepicker-header__date">
+            <div class="calendar-header__date">
                 {{date_formatted}}
             </div>
         </div>
+
+        <div class="calendar-controls">
+          <div class="calendar-controls__label">{{ month.getFormatted() }}</div>
+            <button class="calendar-controls__prev" @click="prevMounth()">Prev</button>
+            <button class="calendar-controls__next" @click="nextMonth()">Next</button>
+        </div>
+
         <div class="calendar-week">
             <div v-for="weekday in weekdays" class="calendar__weekday">
                 {{weekday}}
@@ -76,7 +83,6 @@
 
 </template>
 
-
 <script>
     import Month from '../modules/month'
 
@@ -90,19 +96,38 @@
             }
         },
         methods: {
-            isSelected: function (day) {
+            isSelected (day) {
                 return this.date.unix() === day.unix()
 
             },
-            selectDate: function (day) {
+            selectDate (day) {
                 this.date = day.clone()
+            },
+            nextMonth () {
+                let month = this.month.month + 1
+                let year = this.month.year
+                if (month > 11) {
+                    year += 1
+                    month = 0
+                }
+                this.month = new Month(month, year)
+            },
+            prevMounth () {
+                let month = this.month.month - 1
+                let year = this.month.year
+                if (month < 1) {
+                    year += 1
+                    month = 11
+                }
+                this.month = new Month(month, year)
             }
+
         },
         computed: {
             year() {
                 return this.date.format('YYYY')
             },
-            date_formatted() {
+            date_formatted () {
                 return this.date.format('dddd DD MMM')
             }
         }
