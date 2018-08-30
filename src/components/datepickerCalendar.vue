@@ -1,7 +1,8 @@
 <style lang="sass">
-    $header-height: 100px
+    $header-height: 40px
     $calendar-width: 200px
     $day-size: ($calendar-width - 30px)/7
+    $accent-color: blue
 
     .calendar
         border-bottom: 1px solid #ccc
@@ -30,7 +31,6 @@
             text-align: center
 
         &-days
-            background: red
             display: flex
             flex-wrap: wrap
             padding: 15px
@@ -47,10 +47,9 @@
                 &.selected
                     color: blue
 
-
 </style>
 <template>
-    <div class="calendar">
+    <div class="calendar" @click.stop="">
         <div class="calendar-header">
             <div class="calendar-header__year">
                 {{year}}
@@ -84,54 +83,53 @@
 </template>
 
 <script>
-    import Month from '../modules/month'
+import Month from '../modules/month'
 
-    export default {
-        props: ['date'],
-        data() {
-            console.log(this.date.unix());
-            return {
-                weekdays: ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'],
-                month: new Month(this.date.month(), this.date.year())
-            }
-        },
-        methods: {
-            isSelected (day) {
-                return this.date.unix() === day.unix()
-
-            },
-            selectDate (day) {
-                this.date = day.clone()
-            },
-            nextMonth () {
-                let month = this.month.month + 1
-                let year = this.month.year
-                if (month > 11) {
-                    year += 1
-                    month = 0
-                }
-                this.month = new Month(month, year)
-            },
-            prevMounth () {
-                let month = this.month.month - 1
-                let year = this.month.year
-                if (month < 1) {
-                    year += 1
-                    month = 11
-                }
-                this.month = new Month(month, year)
-            }
-
-        },
-        computed: {
-            year() {
-                return this.date.format('YYYY')
-            },
-            date_formatted () {
-                return this.date.format('dddd DD MMM')
-            }
-        }
-
+export default {
+  props: ['date', 'isVisible'],
+  data () {
+    return {
+      weekdays: ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'],
+      month: new Month(this.date.month(), this.date.year())
     }
+  },
+  methods: {
+    isSelected (day) {
+      return this.date.unix() === day.unix()
+    },
+    selectDate (day) {
+      this.date = day.clone()
+      this.isVisible = false
+      console.log(this.isVisible)
+      this.$emit('selectDate', {date: this.date, isVisible: this.isVisible})
+    },
+    nextMonth () {
+      let month = this.month.month + 1
+      let year = this.month.year
+      if (month > 11) {
+        year += 1
+        month = 0
+      }
+      this.month = new Month(month, year)
+    },
+    prevMounth () {
+      let month = this.month.month - 1
+      let year = this.month.year
+      if (month < 0) {
+        year -= 1
+        month = 11
+      }
+      this.month = new Month(month, year)
+    }
+  },
+  computed: {
+    year () {
+      return this.date.format('YYYY')
+    },
+    date_formatted () {
+      return this.date.format('dddd DD MMM')
+    }
+  }
+}
 
 </script>
