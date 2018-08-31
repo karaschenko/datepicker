@@ -1,9 +1,8 @@
 <template>
-   <div>
-       <select name="pick-period" v-model="pickedPeriod" @change="check">
+   <div class="datepicker">
+       <select name="pick-period" v-model="pickedPeriod" @change="changePeriod">
            <option  v-for="(period, index) in pickPeriod"  :value="index">{{ period }}</option>
        </select>
-       {{ pickedPeriod }}
    </div>
 </template>
 
@@ -16,18 +15,9 @@ export default {
     }
   },
   methods: {
-    check: function () {
-      console.log(this.pickedPeriod)
-        if (this.pickedPeriod == 0) {
-            alert('xyi')
-        } else if (this.pickedPeriod == 1) {
-          alert('pizda')
-        }
+    changePeriod: function () {
+      this.$emit('pickPeriod', this.pickedPeriod)
     }
-  },
-  mounted: function () {
-    this.check()
   }
-
 }
 </script>

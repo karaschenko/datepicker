@@ -1,9 +1,8 @@
 <template>
     <div class="datepicker">
-
-        <input type="text" :value="date_formatted" @click="showDatepicker" ref="dateInput">
-        <input type="hidden" :name="name" :value="date_raw">
+        <input class="datepicker__input" type="text" :value="value" :name="name" :disabled="isDisabled" @click="showDatepicker" ref="dateInput">
         <datepickerCalendar :date="date" v-if="isVisible == true" :isVisible="isVisible" @selectDate="selectDate"></datepickerCalendar>
+        <div class="calendar-icon"></div>
     </div>
 </template>
 
@@ -12,6 +11,15 @@
         position: relative
         display: flex
         justify-content: flex-start
+
+        &__input
+            height: 40px
+            padding-left: 15px
+            max-width: 160px
+
+        .calendar-icon
+            top: 12px
+            pointer-events: none
 
 </style>
 
@@ -23,7 +31,8 @@ export default {
   props: {
     value: {type: String, required: true},
     format: {type: String, required: true},
-    name: {type: String}
+    name: {type: String},
+    isDisabled: {type: Boolean}
   },
 
   methods: {
@@ -42,7 +51,7 @@ export default {
     hideDatepicker () {
       this.isVisible = false
       document.removeEventListener('click', this.hideDatepicker)
-    }
+    },
   },
 
   computed: {

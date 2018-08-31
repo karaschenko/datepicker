@@ -1,11 +1,12 @@
 <template>
-    <select>
-        <option  v-for="(timeZone, index) in timeZones" :value="index"> Timez{{timeZone}} </option>
+    <select class="timezonepicker__select" v-model="pickedTimezone" @change="selectTimezone">
+        <option  v-for="timeZone in timeZones" :value="timeZone"> Timezone: {{timeZone}} </option>
     </select>
 </template>
 
-<style lang="sass">
-
+<style lang="sass" scoped="">
+    .timezonepicker__select
+        margin-top: 0
 </style>
 
 <script>
@@ -15,7 +16,13 @@ import 'moment-timezone'
 export default {
   data () {
     return {
-      timeZones: moment.tz.names()
+      timeZones: moment.tz.names(),
+      pickedTimezone: 'Africa/Abidjan'
+    }
+  },
+  methods: {
+    selectTimezone () {
+      this.$emit('pickTimezone', this.pickedTimezone)
     }
   }
 }

@@ -18,6 +18,6 @@ export default class Month {
   }
 
   getFormatted () {
-    return this.start.format('MMMM-YY')
+    return this.start.format('MMMM YYYY')
   }
 }
